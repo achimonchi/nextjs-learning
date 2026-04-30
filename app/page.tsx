@@ -1,9 +1,14 @@
-"use client";
+"use server"
 
 import { SearchForm } from "@/app/components/search/search-form";
 import { SearchResults } from "@/app/components/search/search-results";
+import { searchProducts } from "@/modules/discovery/search/usecase";
 
-export default function Home() {
+export default async function Home() {
+  const data = await searchProducts("", "products")
+  if (!data.ok) {
+    return <div>Error: {data.message}</div>
+  }
   return (
     <div className="min-h-full bg-zinc-50 font-sans text-zinc-900 dark:bg-black dark:text-zinc-50">
       <main className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
@@ -17,7 +22,8 @@ export default function Home() {
         </header>
 
         <SearchForm />
-        <SearchResults />
+        {/* {JSON.stringify(data)} */}
+        <SearchResults data={data.data} />
       </main>
     </div>
   );
